@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Topple the Pigs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Pixelify+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="zafrSting" class="studio-sting" role="presentation">
+  <button class="studio-hint" type="button">Skip</button>
+  <div class="studio-portrait" id="zafrPortrait">
+    <div class="studio-portrait-pop" id="zafrPop">
+      <div class="studio-portrait-art">
+        <img id="zafrMe" src="images/intro/Me.PNG" alt="" draggable="false">
+        <img id="zafrWink" src="images/intro/Me-wink.PNG" alt="" draggable="false">
+      </div>
+    </div>
+  </div>
+  <div class="studio-logo-stage" id="zafrLogoStage" hidden>
+    <img id="zafrLogo" src="images/intro/ZG-Logo.svg" alt="Zaffr Games" draggable="false">
+  </div>
+</div>
+<canvas id="view" aria-label="Topple the Pigs, a physics game on a floating island"></canvas>
+
+<div class="hud-tl panel">
+  <div class="brand" id="brand">Topple the Pigs</div>
+  <div class="status" id="status">Running</div>
+  <div class="row"><span id="count">0 objects</span><span id="voidc"></span></div>
+</div>
+
+<div class="hud-tr">
+  <button class="ibtn panel" id="menuBtn" title="Main menu">MENU</button>
+  <button class="ibtn panel" id="soundBtn" title="Sound" aria-label="Toggle sound"><svg viewBox="0 0 9 9" fill="currentColor"><path d="M1 3h2l2-2v7L3 6H1zM6 3h1v3H6zM7 2h1v5H7z"/></svg></button>
+</div>
+
+<div class="sim panel" id="sim">
+  <button class="sbtn" id="playBtn">Pause<small>P</small></button>
+  <div id="simCamp" style="display:grid;gap:5px" hidden>
+  <button class="sbtn" id="restartBtn">Restart stage</button>
+  <button class="sbtn" id="stagesBtn">All stages</button>
+  </div>
+  <button class="sbtn" id="mainMenuBtn" style="margin-top:6px">Main menu</button>
+</div>
+
+<div class="sub panel" id="sub">
+    <div class="subtop">
+      <select id="tabs" class="catsel" aria-label="Category"></select>
+      <div class="opts"><div class="seg" id="sizeSeg"><button data-v="0">S</button><button data-v="1">M</button><button data-v="2">L</button></div></div>
+    </div>
+    <div class="items" id="items"></div>
+</div>
+<div class="dock">
+  <div class="tools panel" id="tools"></div>
+</div>
+<div id="toast" class="panel"></div>
+<div id="tip" class="panel"></div>
+<div id="reacts"></div>
+<div id="slomo" hidden aria-hidden="true"><div class="sm-vig"></div><div class="sm-scan"></div><div class="sm-sign"><i></i><b>SLO-MO</b><span>REPLAY</span></div><div class="sm-bar top"></div><div class="sm-bar bot"></div></div>
+<div id="cine" hidden><div class="cine-lines"></div><div class="cine-bar top"></div><div class="cine-bar bot"></div><div class="cine-burst"><span>OINK!!</span></div><div class="cine-skip">Click to skip</div></div>
+<div id="spinHud" hidden aria-hidden="true"><svg width="30" height="30" viewBox="0 0 28 28"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9.5A8.5 8.5 0 1 0 22.5 16" stroke="#120e0c" stroke-width="5"/><path d="M21 4v6h-6" stroke="#120e0c" stroke-width="5"/><path d="M21 9.5A8.5 8.5 0 1 0 22.5 16" stroke="#f2c14e" stroke-width="2.5"/><path d="M21 4v6h-6" stroke="#f2c14e" stroke-width="2.5"/></g></svg><span>Move to rotate</span></div>
+<div id="clock" class="clock" hidden aria-live="off">
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <defs><radialGradient id="clkFace" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#4a3a2f"/><stop offset="1" stop-color="#1e1713"/></radialGradient></defs>
+    <circle cx="50" cy="50" r="48" fill="#120e0c"/>
+    <circle cx="50" cy="50" r="46" fill="url(#clkFace)" stroke="#6e5747" stroke-width="2"/>
+    <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="7"/>
+    <circle id="clockArc" cx="50" cy="50" r="42" fill="none" stroke="#f2c14e" stroke-width="7" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+  </svg>
+  <div id="clockText">1:00</div>
+</div>
+<div id="meter" hidden><div class="mlabel">POWER</div><div class="mtube"><div class="mticks"></div><div id="meterFill"></div><div class="mgloss"></div></div><div class="mval" id="meterVal">0%</div><div class="mhint">CLICK</div></div>
+<div class="intro" id="menu" hidden style="background:rgba(18,14,12,.62)">
+  <div class="menu-wrap">
+    <div class="menu-logo">
+      <img src="images/logo.png" alt="Topple the Pigs">
+    </div>
+    <img class="menu-banner" src="images/tagline.png" alt="The pigs are revolting. Topple them.">
+    <button class="ibtn panel primary menu-start" id="mStart" type="button">Start</button>
+  </div>
+</div>
+<div class="intro" id="levels" hidden style="background:rgba(18,14,12,.62)">
+  <div class="intro-card panel stage-screen">
+    <h2>Choose a stage</h2>
+    <div class="stage-row">
+      <button class="stage-arrow panel" id="stagePrev" type="button" aria-label="Previous stage"><i></i></button>
+      <div class="stage-view" id="stageView">
+        <div class="stage-card" id="stageCard">
+          <div class="stage-shot-slot">
+            <img class="stage-shot" id="stageShot" alt="" draggable="false">
+          </div>
+          <span class="ln" id="stageNum"></span>
+          <b id="stageName"></b>
+          <span class="st" id="stageStars"></span>
+          <div class="stage-action">
+            <button class="ibtn panel primary" id="stageGo" type="button">Start</button>
+            <span class="stage-lock" id="stageLock">Locked</span>
+          </div>
+        </div>
+      </div>
+      <button class="stage-arrow panel" id="stageNext" type="button" aria-label="Next stage"><i></i></button>
+    </div>
+    <div class="intro-foot"><span></span><button class="ibtn panel" id="levelsBack">Back to menu</button></div>
+  </div>
+</div>
+<div class="intro" id="modal" hidden role="dialog" aria-modal="true">
+  <div class="intro-card panel">
+    <div class="intro-step" id="mdStep"></div>
+    <h2 id="mdTitle"></h2>
+    <div id="mdBody"></div>
+    <div class="intro-foot"><div id="mdNav"></div><div class="mdbtns" id="mdBtns"></div></div>
+  </div>
+</div>
+<div id="coach" hidden>
+  <div id="coachRing"></div>
+  <div id="coachBubble" class="panel" role="dialog" aria-labelledby="coachTitle">
+    <div class="intro-step" id="coachStep"></div>
+    <h3 id="coachTitle"></h3>
+    <p id="coachText"></p>
+    <div class="intro-foot"><button class="ibtn panel ghost" id="coachSkip">Skip tour</button><div style="display:flex;gap:6px"><button class="ibtn panel" id="coachBack">Back</button><button class="ibtn panel primary" id="coachNext">Next</button></div></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+<script src="js/game.js"></script>
+<script>setTimeout(function(){document.documentElement.classList.remove('studio-intro');var s=document.getElementById('zafrSting');if(s)s.remove();},20000);</script>
+</body>
+</html>

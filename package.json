@@ -1,0 +1,15 @@
+{
+  "name": "topple-the-pigs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pixel-styled 3D physics game: topple the rude pigs.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.4.1"
+  }
+}
