@@ -736,7 +736,7 @@ function boot(hotData){
       const a=Math.PI/4;thumbCam.position.set(c.x+Math.sin(a)*30,c.y+22.5,c.z+Math.cos(a)*30);thumbCam.lookAt(c);
       const pw=(dm.x+dm.z)*.72,ph=dm.y*.85+(dm.x+dm.z)*.36;thumbCam.zoom=Math.min(1,(TH.w/TH.ppu*.9)/pw,(TH.h/TH.ppu*.9)/ph);thumbCam.updateProjectionMatrix();
       thumbR.render(thumbScene,thumbCam);const url=thumbR.domElement.toDataURL();thumbScene.remove(m);return thumbCache[key]=url;}catch(e){return '';}}
-  function partRow(k,count,isNew){const kd=K[k],b=document.createElement('button');b.className='prow'+(state.kind===k?' sel':'')+(count===0?' empty':'');b.title=kd.tip||'';
+  function partRow(k,count,isNew){const kd=K[k],b=document.createElement('button');const teach=!!(camp&&camp.L.teach===k&&count!=null&&count===camp.L.inv[k]);b.className='prow'+(state.kind===k?' sel':'')+(count===0?' empty':'')+(teach?' pulse':'');b.title=kd.tip||'';
     b.innerHTML='<span class="thumb"><img alt="" draggable="false" src="'+thumb(k)+'"></span><span class="pname">'+kd.name+(isNew?'<span class="pnew">NEW</span>':'')+'</span>'+(count!=null?'<span class="pcount">×'+count+'</span>':'<span></span>');
     b.onclick=()=>{if(trayDrag&&trayDrag.done)return;const changed=state.kind!==k;state.kind=k;renderItems();rebuildGhost();if(changed)sfx.ui();};
     b.addEventListener('pointerdown',e=>{if(e.button!==0)return;trayDrag={k,x:e.clientX,y:e.clientY,active:false};});return b;}
@@ -1082,13 +1082,13 @@ function boot(hotData){
     {name:'Double trouble',pokes:4,par:3,h:8,time:75,zone:[1.5,1.5,5.5,5.5],inv:{ball:4,plank:2,pillar:2,domino:10},goal:'Knock both pigs off their towers',
       hint:'Two towers, two pigs. A falling pillar can take out more than one thing.',
       build(){tower(-2.9,-1,4);tower(-1,-2.9,4);trees([[-6.5,5],[5,-6.5],[-6,-6]]);}},
-    {name:'Artillery',pokes:1,par:1,h:10,time:90,zone:[3,3,7,7],inv:{cannon:1,tnt:1,ball:3,ramp:1},goal:'Knock the pig off its block',
+    {name:'Artillery',pokes:1,par:1,h:10,time:90,zone:[3,3,7,7],inv:{cannon:1,tnt:1,ball:3,ramp:1},teach:'cannon',goal:'Knock the pig off its block',
       hint:'Position, place and rotate the cannon to aim at the castle. It fires every few seconds.',
       build(){const c=-3.5;castle(c,1.75);pedestal(c,c);trees([[-8,6],[6,-8],[-8,-8],[8,0]]);}},
-    {name:'Wind tunnel',pokes:0,par:2,h:9,time:60,zone:[1,1,5,5],inv:{fan:2,beach:3,ball:2,crate:2},goal:'Blow the pig off its block',
+    {name:'Wind tunnel',pokes:0,par:2,h:9,time:60,zone:[1,1,5,5],inv:{fan:2,beach:3,ball:2,crate:2},teach:'fan',goal:'Blow the pig off its block',
       hint:'No pokes here. Wind alone can’t shift the pig, but it can throw things at it.',
       build(){pedestal(-2,-2);trees([[-7,5],[5,-7],[-7,-7]]);}},
-    {name:'Springboard',pokes:3,par:2,h:9,time:80,zone:[1,1,5,5],inv:{spring:2,ball:4,ramp:1,crate:2},goal:'Reach the pig on its high perch',
+    {name:'Springboard',pokes:3,par:2,h:9,time:80,zone:[1,1,5,5],inv:{spring:2,ball:4,ramp:1,crate:2},teach:'spring',goal:'Reach the pig on its high perch',
       hint:'A spring pad bounces anything that lands on it straight up.',
       build(){for(const t of[-1.64,-.82,0,.82,1.64])at('stone',-.6+t*.707,-.6-t*.707,{yaw:PI4});pedestal(-2.7,-2.7,3);trees([[-7,4],[4,-7],[-7,-7]]);}},
     {name:'Pig pile',pokes:4,par:3,h:9,time:90,zone:[1.5,1.5,5.5,5.5],inv:{anvil:1,ball:5,tnt:1,domino:8,ramp:1},goal:'Knock all three pigs down',
@@ -1099,10 +1099,10 @@ function boot(hotData){
     {name:'Long range',pokes:2,par:2,h:11,time:100,zone:[5,5,9,9],inv:{cannon:2,conveyor:1,ramp:2,ball:6,spring:1,beach:2},goal:'Knock both distant pigs down',
       hint:'They’re a long way off. Conveyors keep things moving.',
       build(){pedestal(-5.5,-3.8,2);pedestal(-3.8,-5.5,1);trees([[-9,7],[7,-9],[-9,-9],[0,9]]);}},
-    {name:'Event horizon',pokes:0,par:1,h:9,time:60,zone:[-1.5,-1.5,1.5,1.5],inv:{hole:1,ball:2,crate:2},goal:'Get all three pigs off their crates',
+    {name:'Event horizon',pokes:0,par:1,h:9,time:60,zone:[-1.5,-1.5,1.5,1.5],inv:{hole:1,ball:2,crate:2},teach:'hole',goal:'Get all three pigs off their crates',
       hint:'Place the black hole and wait.',
       build(){[[4,-2],[-3,3.2],[-3.2,-3]].forEach(([x,z])=>{at('crate',x,z);at('pig',x,z,{y:1.08,yaw:Math.atan2(-x,-z)});});trees([[-7,7],[7,7],[7,-7]]);}},
-    {name:'Tornado alley',pokes:2,par:2,h:10,time:90,zone:[-1.5,-1.5,1.5,1.5],inv:{tornado:2,fan:2,balloon:3,beach:4,ball:3},goal:'Knock all four pigs down',
+    {name:'Tornado alley',pokes:2,par:2,h:10,time:90,zone:[-1.5,-1.5,1.5,1.5],inv:{tornado:2,fan:2,balloon:3,beach:4,ball:3},teach:'tornado',goal:'Knock all four pigs down',
       hint:'Tornadoes wander about and lift whatever they pass over.',
       build(){[[-5.5,2],[2,-5.5],[-4.5,-4.5],[4.5,4.5]].forEach(([x,z])=>pedestal(x,z));trees([[-8,8],[8,-8]]);}},
     {name:'Fortress',pokes:5,par:4,h:11,time:150,zone:[3,3,9,9],inv:{cannon:2,tnt:3,ramp:1,ball:6,domino:12,fan:1,spring:1,anvil:1},goal:'Knock every pig off',
@@ -1282,7 +1282,7 @@ function boot(hotData){
     e.preventDefault();e.stopImmediatePropagation();
     stepStage(e.key==='ArrowRight'?1:-1);
   },true);
-  function startLevel(i,quick){clearStageMotion();stageToken++;$('levels').hidden=true;$('modal').hidden=true;if(drama)endDrama();reacts.splice(0).forEach(r=>r.el.remove());camHold=0;camSave=null;if(cine){cine.done=()=>{};endTaunt(true);}document.body.classList.remove('chromeless');mode='campaign';const L=LEVELS[i];releaseGrab();clearAll();buildIsland(L.h);setZone(L.zone);resetCamera();state.wind=false;syncBtns();quakeT=0;state.rotY=0;
+  function startLevel(i,quick){clearStageMotion();stageToken++;$('levels').hidden=true;$('modal').hidden=true;if(drama)endDrama();reacts.splice(0).forEach(r=>r.el.remove());camHold=0;camSave=null;if(cine){cine.done=()=>{};endTaunt(true);}document.body.classList.remove('chromeless');mode='campaign';const L=LEVELS[i];releaseGrab();clearAll();buildIsland(L.h);setZone(L.zone);resetCamera();state.wind=false;syncBtns();quakeT=0;state.rotY=0;stillFor=0;stuckTold=false;
     camp={i,L,t:L.time,running:false,done:false,pokesUsed:0,inv:Object.assign({},L.inv)};L.build();objs.forEach(o=>{if(o.k==='brick')makeDormant(o);});for(let k=0;k<150;k++)world.step(STEP);objs.forEach(o=>{o.mine=false;o.age=0;if(o.k==='pig'){const b=o.parts[0].body;o.startY=b.position.y;o.sx=b.position.x;o.sz=b.position.z;o.bx=b.position.x;o.bz=b.position.z;o.bup=b.quaternion.vmult(UPV).y;}o.parts.forEach(pt=>{if(pt.body){pt.body.velocity.set(0,0,0);pt.body.angularVelocity.set(0,0,0);}});});camp.pigs=objs.filter(o=>o.k==='pig').length;state.kind=Object.keys(L.inv)[0];applyMode();setTool('place');
     state.paused=true;syncPlay();
     playTaunt(()=>{if(quick)return run();modal('Stage '+(i+1)+' of '+LEVELS.length,L.name,'<div class="brief"><div class="goal">'+goalText()+'</div><div class="parts">'+partsList(L.inv)+'</div><div class="rules"><span>'+(L.pokes===0?'No pokes':L.pokes+(L.pokes===1?' poke':' pokes'))+'</span><span>Par: '+L.par+(L.par===1?' part':' parts')+'</span></div><div class="hint">'+L.hint+'</div></div>',
@@ -1362,7 +1362,7 @@ function boot(hotData){
       p.el.style.left=((v.x+1)/2*innerWidth)+'px';p.el.style.top=((1-v.y)/2*innerHeight)+'px';p.el.classList.toggle('show',speaking);});
     let total=0;cine.pigs.forEach(p=>{total+=dur(p);});if(t>st+total+.25)endTaunt();}
   $('cine').addEventListener('pointerdown',e=>{e.preventDefault();endTaunt();});
-  addEventListener('keydown',e=>{if(cine&&[' ','Enter','Escape'].includes(e.key)){e.preventDefault();endTaunt();}},true);
+  addEventListener('keydown',e=>{if(cine&&[' ','Enter','Escape'].includes(e.key)){e.preventDefault();endTaunt();return;}if(drama&&drama.phase==='slow'&&(e.key==='Escape'||e.key===' ')){e.preventDefault();skipSlomo();}},true);
   const NEAR=[["That was CLOSE!", null], ["Whoa whoa WHOA!", null], ["HEY! Watch it!", null], ["My bacon!", null], ["Missed me! Ha!", "...that was close"], ["That tickled.", null], ["Not even close!", "(it was very close)"], ["My trotters!", null], ["I nearly went full sausage!", null], ["You call that a shove?", "...ow."], ["Hog-wash! Lucky miss!", null], ["Easy on the ham!", null], ["Did you feel that?", "I didn't. *wobble*"], ["Still standing! Oink!", "Barely."], ["My crackling is crackling!", null], ["Rude! Utterly rude!", null], ["Hold the pork chops!", null], ["I'm not shaking.", "You're shaking!"], ["Ooh, that hit my snout!", null], ["Squeee... I mean, ha!", null], ["You've rattled my sty!", null], ["Almost! Almost bacon!", null], ["Is that your best?", "...don't answer that."], ["Steady... steady...", "Phew!"], ["Swine-ging and a miss!", null], ["Not today, chef!", null], ["That's assault with a deadly ball!", null], ["Pig down! Wait, no. Pig fine!", null], ["Ham-azing dodge, if I say so myself!", null]];
   const reacts=[];let camSave=null,camHold=0;
   function bleep(){sfx.bleep();}
@@ -1381,7 +1381,9 @@ function boot(hotData){
     if(camHold>0){camHold-=dt;if(camHold<=0&&camSave){panT.copy(camSave.pan);zoomT=camSave.zoom;lookYT=camSave.ly;camSave=null;}}}
   let drama=null,dramaCool=0,slomoHide=0,slomoBarT=0,slomoUiT=0,slomoVeilT=0;
   const tiltOf=b=>b.quaternion.vmult(UPV).y;
-  function startDrama(o){o.dramaUsed=true;drama={o,phase:'watch',t:0,saved:{pan:panT.clone(),zoom:zoomT,ly:lookYT}};zoomT=clamp(Math.max(zoomT,1)*1.5,1.3,2);}
+  const pigHot=o=>{if(!o||o.k!=='pig'||o.dead||o.age<.4)return false;const b=o.parts[0]&&o.parts[0].body;if(!b)return false;return b.velocity.norm()>.8||b.angularVelocity.norm()>2||tiltOf(b)<.85;};
+  function markWave(){for(const p of objs)if(pigHot(p))p.dramaUsed=true;}
+  function startDrama(o){if(!o||o.dead||o.dramaUsed||o.dramaHold||drama)return;o.dramaHold=true;drama={o,phase:'watch',t:0,saved:{pan:panT.clone(),zoom:zoomT,ly:lookYT}};zoomT=clamp(Math.max(zoomT,1)*1.5,1.3,2);}
   function showSlomo(){slomoHide++;const ov=$('slomo'),gen=slomoHide;
     clearTimeout(slomoBarT);clearTimeout(slomoUiT);clearTimeout(slomoVeilT);slomoBarT=slomoUiT=slomoVeilT=0;
     ov.classList.remove('out','go','bars');ov.hidden=false;void ov.offsetWidth;ov.classList.add('go');
@@ -1392,22 +1394,24 @@ function boot(hotData){
     const uiBack=()=>{if(hide!==slomoHide)return;document.body.classList.remove('slomo');clearTimeout(slomoVeilT);slomoVeilT=setTimeout(()=>releaseHud(hide,()=>slomoHide),FADE_MS);};
     if(instant||reduceMotion()){clearTimeout(slomoVeilT);slomoVeilT=0;document.body.classList.remove('slomo');if(!document.body.classList.contains('cinema'))document.body.classList.remove('hudfade');close();return;}
     ov.classList.add('out');slomoUiT=setTimeout(uiBack,EXIT_GAP);setTimeout(close,480);}
-  function startSlow(){drama.phase='slow';drama.slowAt=drama.t;state.speed=.22;zoomT=2.5;const hud=document.querySelector('.dock');if(hud)void hud.offsetWidth;document.body.classList.add('hudfade','slomo');showSlomo();sfx.slomo();}
-  function endDrama(){if(!drama)return;const sv=drama.saved,slow=drama.phase==='slow';drama=null;dramaCool=2.2;state.speed=1;
+  function startSlow(){if(!drama||drama.phase==='slow')return;drama.phase='slow';drama.slowAt=drama.t;drama.o.dramaUsed=true;markWave();state.speed=.22;zoomT=2.5;const hud=document.querySelector('.dock');if(hud)void hud.offsetWidth;document.body.classList.add('hudfade','slomo');showSlomo();sfx.slomo();}
+  function skipSlomo(){if(!drama||drama.phase!=='slow')return;sfx.cancel();endDrama();}
+  $('slomo').addEventListener('pointerdown',e=>{if($('slomo').classList.contains('out'))return;e.preventDefault();skipSlomo();});
+  function endDrama(){if(!drama)return;const o=drama.o,sv=drama.saved,slow=drama.phase==='slow';if(slow){markWave();dramaCool=1.2;}else if(o&&!o.dramaUsed&&!pigHot(o))o.dramaHold=false;drama=null;state.speed=1;
     if(sv){panT.copy(sv.pan);zoomT=sv.zoom;lookYT=sv.ly;}if(slow)hideSlomo(false);else document.body.classList.remove('slomo');}
   function tickDrama(dt){
-    if(dramaCool>0)dramaCool-=dt;
-    if(mode!=='campaign'||!camp||!camp.running||cine){if(drama)endDrama();return;}
+    if(mode!=='campaign'||!camp||!camp.running||cine){if(drama)endDrama();dramaCool=0;return;}
     if(drama){drama.t+=dt;const o=drama.o;
       if(o.dead){if(drama.deadAt==null)drama.deadAt=drama.t;if(drama.t-drama.deadAt>(drama.phase==='slow'?1.1:.6))endDrama();return;}
       const b=o.parts[0].body,v=b.velocity.norm(),w=b.angularVelocity.norm(),tl=tiltOf(b);
       panT.set(clamp(b.position.x,-14,14),0,clamp(b.position.z,-14,14));lookYT=b.position.y;
       if(drama.phase==='watch'){if((b.position.y<o.startY-.3&&b.velocity.y<-1)||tl<.5)startSlow();else if(drama.t>1.4&&v<.2&&w<.4)endDrama();else if(drama.t>5)endDrama();}
-      else if(drama.t-drama.slowAt>3)endDrama();
+      else{markWave();if(drama.t-drama.slowAt>3)endDrama();}
       return;}
-    if(camp.done||dramaCool>0||aim||spin||grab||camDrag)return;
-    for(const o of objs){if(o.k!=='pig'||o.dead||o.dramaUsed||o.age<.4)continue;const b=o.parts[0].body;if(!b)continue;
-      if(b.velocity.norm()>.8||b.angularVelocity.norm()>2||tiltOf(b)<.85){startDrama(o);break;}}}
+    if(dramaCool>0){dramaCool-=dt;markWave();return;}
+    for(const o of objs)if(o.k==='pig'&&o.dramaHold&&!o.dramaUsed&&!pigHot(o))o.dramaHold=false;
+    if(camp.done||aim||spin||grab||camDrag)return;
+    for(const o of objs){if(o.k!=='pig'||o.dead||o.dramaUsed||o.dramaHold||o.age<.4)continue;if(pigHot(o)){startDrama(o);break;}}}
   function idleRest(o){const m=o.parts[0]&&o.parts[0].mesh;if(m&&(m.scale.x!==1||m.scale.y!==1))m.scale.set(1,1,1);}
   function pigIdleOk(o){if(!o||o.k!=='pig'||o.dead||o.age<.45)return false;if((drama&&drama.o===o)||reacts.some(r=>r.o===o)||(grab&&grab.o===o))return false;const b=o.parts[0].body;if(!b)return false;
     if(o.disturbedAt!=null||b.velocity.norm()>.28||b.angularVelocity.norm()>.55||tiltOf(b)<.92)return false;
@@ -1419,12 +1423,14 @@ function boot(hotData){
       const m=o.parts[0].mesh,ph=o.ai.h,w=Math.sin(elapsed*3.2+ph),q=Math.sin(elapsed*4.6+ph*1.3);
       m.rotateZ(w*.05);m.rotateX(q*.03);m.rotateY(w*.08);m.scale.set(1+q*.04,1-q*.04,1+q*.04);}}
   function goalText(){const n=camp.pigs;return n===1?'Topple the pig before the time runs out.':'Topple all '+n+' pigs before the time runs out.';}
-  function run(){lastSec=Math.ceil(camp.t);camp.running=true;state.paused=false;syncPlay();}
+  const TEACH_TIP={fan:'Place a fan. It shoves light things, not the pig.',spring:'Place a spring, then drop something on it.',cannon:'Place the cannon and turn it toward the pig.',hole:'Place the black hole between the pigs. It pulls, it does not aim.',tornado:'Place a tornado near a pig. It wanders from there.'};
+  function run(){lastSec=Math.ceil(camp.t);camp.running=true;state.paused=false;syncPlay();renderItems();
+    const tip=TEACH_TIP[camp.L.teach];if(tip)setTimeout(()=>{if(camp&&camp.running&&!camp.done&&camp.inv[camp.L.teach]===camp.L.inv[camp.L.teach])toast(tip,3400);},600);}
   function killPig(o){if(o.dead)return;if(drama&&drama.phase==='slow')sfx.downer();const p=mainPos(o);burst(p.x,p.y+.2,p.z,28,['#f2a0b0','#e07d92','#ffffff'],4,.14,.7,.6,true);sfx.splat();sfx.oink();removeObj(o);}
   function onPigGone(){if(clearing||mode!=='campaign'||!camp||camp.done||!camp.running)return;if(!objs.some(o=>o.k==='pig'&&!o.dead)){camp.done=true;const c=camp;setTimeout(()=>{if(camp===c)win();},1300);}}
   function win(){const L=camp.L,i=camp.i,f=camp.t/L.time,used=Object.keys(L.inv).reduce((a,k)=>a+L.inv[k]-(camp.inv[k]||0),0),gotPar=used<=L.par,gotFast=f>=.5,st=1+(gotPar?1:0)+(gotFast?1:0);prog.stars[i]=Math.max(prog.stars[i]||0,st);prog.cleared=Math.max(prog.cleared,i+1);saveProg();sfx.win();camp.running=false;
-    const next=LEVELS[i+1],many=camp.pigs>1,stars=[0,1,2].map(n=>'<span'+(n<st?' class="on"':'')+' style="--i:'+n+'" aria-hidden="true">★</span>').join('');
-    modal('Stage '+(i+1)+' cleared',many?'Pigs toppled!':'Pig toppled!','<div class="brief"><div class="big-stars" role="img" aria-label="'+(st===1?'1 star':st+' stars')+'">'+stars+'</div></div>',
+    const next=LEVELS[i+1],many=camp.pigs>1,why=gotPar&&gotFast?'Par and fast':gotPar?'Par':gotFast?'Fast':'',stars=[0,1,2].map(n=>'<span'+(n<st?' class="on"':'')+' style="--i:'+n+'" aria-hidden="true">★</span>').join('');
+    modal('Stage '+(i+1)+' cleared',many?'Pigs toppled!':'Pig toppled!','<div class="brief"><div class="big-stars" role="img" aria-label="'+(st===1?'1 star':st+' stars')+'">'+stars+'</div>'+(why?'<div class="star-why">'+why+'</div>':'')+'</div>',
       next?[['All stages',openLevels],['Retry',()=>startLevel(i,true)],['Next stage',()=>startLevel(i+1),true]]:[['Retry',()=>startLevel(i,true)],['Back to stages',openLevels,true]]);
     $('modal').classList.add('win');}
   function lose(){camp.done=true;camp.running=false;sfx.lose();const n=objs.filter(o=>o.k==='pig').length;
@@ -1458,7 +1464,9 @@ function boot(hotData){
   buildIsland(12);
   if(saved&&saved.v===1&&saved.objs&&saved.objs.length)load(saved);else SCENES.playground();
   applyMode();openMenu();
-  let last=performance.now(),acc=0,elapsed=0,saveT=0,hovT=0;
+  let last=performance.now(),acc=0,elapsed=0,saveT=0,hovT=0,stillFor=0,stuckTold=false;
+  function worldSettled(){for(const o of objs){if(o.dead)continue;if(o.fuse!=null||o.lit!=null)return false;if(o.k==='cannon'&&o.mine&&(o.shots==null||o.shots>0))return false;
+    for(const pt of o.parts){const b=pt.body;if(!b||b.type!==DYN)continue;if(b.velocity.norm()>.45||b.angularVelocity.norm()>.9)return false;}}return true;}
   function frame(now){const dt=Math.min(.1,(now-last)/1000);last=now;elapsed+=dt;
     if(mode==='campaign'&&camp&&camp.running&&!camp.done&&!state.paused){camp.t-=dt*state.speed;const sec=Math.ceil(camp.t);if(sec!==lastSec){lastSec=sec;if(sec>0)clockTick(sec);}if(camp.t<=0){camp.t=0;lose();}}
     drawClock();
@@ -1474,6 +1482,10 @@ function boot(hotData){
       if(o.k==='rocket'&&u.flame&&u.flame.visible)u.flame.scale.set(1,1+Math.random()*.6,1);
       if((o.k==='hen'||o.k==='duck')&&u.head){const b=o.parts[0].body,sp=Math.hypot(b.velocity.x,b.velocity.z);u.head.position.y=(o.k==='hen'?.3:.2)+(sp>.3?Math.abs(Math.sin(elapsed*12+o.id))*.03:0);}}
     tickTaunt(dt);tickReacts(dt);tickDrama(dt);tickIdle(dt);tickBed(dt);
+    if(mode==='campaign'&&camp&&camp.running&&!camp.done&&!state.paused&&!cine&&!drama&&camp.L.pokes>0&&pokesLeft()<=0&&$('modal').hidden){
+      if(worldSettled()){stillFor+=dt;if(stillFor>3&&!stuckTold){stuckTold=true;toast('Nothing is moving, and you are out of pokes. Open the menu to retry.',4200);}}
+      else stillFor=0;}
+    else stillFor=0;
     if(shotWatch){if(mode!=='campaign'||!camp||!camp.running||camp.done){shotWatch=null;placePulse(false);}else if(!state.paused){shotWatch.t+=dt;const v=shotWatch.b.velocity.norm();
       if((shotWatch.t>2.2&&v<.4)||shotWatch.t>6){shotWatch=null;if(objs.some(o=>o.k==='pig'&&!o.dead)&&state.tool!=='place'&&!hasPokeTarget())placePulse(true);}}}
     if(mode!=='campaign'||!camp||camp.done)placePulse(false);
